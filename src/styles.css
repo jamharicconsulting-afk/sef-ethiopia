@@ -1051,3 +1051,82 @@ html, body, #root {
   color: var(--hint);
   line-height: 1.5;
 }
+
+/* ── Gate phone row ─────────────────────────────────────── */
+
+.gate-phone-row {
+  display: flex;
+  gap: 8px;
+  margin-bottom: 12px;
+  align-items: stretch;
+}
+.gate-cc-wrap {
+  position: relative;
+  flex-shrink: 0;
+}
+.gate-cc-btn {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  padding: 0 12px;
+  height: 52px;
+  font-size: 15px;
+  font-family: var(--font-body);
+  color: var(--text);
+  cursor: pointer;
+  white-space: nowrap;
+  font-weight: 500;
+}
+.gate-cc-arrow { font-size: 11px; color: var(--hint); margin-left: 2px; }
+.gate-cc-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  z-index: 200;
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  box-shadow: 0 4px 16px rgba(0,0,0,0.12);
+  min-width: 220px;
+  max-height: 260px;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+.gate-cc-option {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  border: none;
+  background: transparent;
+  padding: 12px 14px;
+  font-size: 14px;
+  font-family: var(--font-body);
+  color: var(--text);
+  cursor: pointer;
+  text-align: left;
+  border-bottom: 1px solid var(--border);
+  min-height: 44px;
+}
+.gate-cc-option:last-child { border-bottom: none; }
+.gate-cc-option:active { background: var(--bg); }
+.gate-cc-option.active { background: #E8F8F2; }
+.gate-cc-option-code { margin-left: auto; color: var(--hint); font-size: 13px; }
+.gate-input {
+  flex: 1;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  font-size: 18px;
+  font-weight: 500;
+  font-family: var(--font-body);
+  color: var(--text);
+  padding: 0 14px;
+  height: 52px;
+  outline: none;
+  width: 100%;
+  min-width: 0;
+}
