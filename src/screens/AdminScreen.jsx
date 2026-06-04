@@ -8,6 +8,7 @@ export default function AdminScreen() {
   const [authed, setAuthed] = useState(false);
   const [passwordInput, setPasswordInput] = useState("");
   const [passwordError, setPasswordError] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
 
   const [commodityId, setCommodityId] = useState("coffee_g2");
   const [marketId, setMarketId] = useState("addis");
@@ -63,14 +64,24 @@ export default function AdminScreen() {
           <div className="admin-logo">ሴፍ</div>
           <h2 className="admin-login-title">Admin Access</h2>
           <p className="admin-login-sub">Enter the password to submit prices</p>
+          <div style={{position:"relative"}}>
           <input
             className={`admin-input${passwordError ? " input-error" : ""}`}
-            type="password"
+            type={showPassword ? "text" : "password"}
             placeholder="Password"
             value={passwordInput}
             onChange={e => setPasswordInput(e.target.value)}
             onKeyDown={e => e.key === "Enter" && handleLogin()}
+            autoComplete="off"
             autoFocus
+            style={{paddingRight:"44px"}}
+          />
+          <button
+            type="button"
+            onClick={() => setShowPassword(p => !p)}
+            style={{position:"absolute",right:"10px",top:"50%",transform:"translateY(-50%)",background:"none",border:"none",cursor:"pointer",fontSize:"18px",color:"var(--hint)"}}
+          >{showPassword ? "🙈" : "👁"}</button>
+          </div>
           />
           {passwordError && <p className="admin-error-msg">Incorrect password</p>}
           <button className="admin-submit-btn" onClick={handleLogin}>
