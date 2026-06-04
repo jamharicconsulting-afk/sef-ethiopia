@@ -1,6 +1,6 @@
 import { lastUpdated } from "../data/priceData";
 
-export default function HomeScreen({ commodities, watchlist, onOpenDetail, alertCount, lang, tr }) {
+export default function HomeScreen({ commodities, watchlist, onOpenDetail, alertCount, lang, tr, subscriberName }) {
   const watchedItems = watchlist
     .map(id => commodities[id])
     .filter(Boolean);
@@ -14,7 +14,7 @@ export default function HomeScreen({ commodities, watchlist, onOpenDetail, alert
       <div className="home-hero">
         <div className="hero-top">
           <div>
-            <p className="greeting">{tr("greeting")}, James 👋</p>
+            <p className="greeting">{tr("greeting")}, {subscriberName} 👋</p>
             <h1 className="hero-title">{tr("todays_prices")}</h1>
           </div>
           <div className="update-pill">

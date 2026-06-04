@@ -878,3 +878,176 @@ html, body, #root {
 .admin-banner-success { background: #E8F8F2; color: var(--green); border: 1px solid #B3E8D4; }
 .admin-banner-error   { background: #FEF0EE; color: var(--red);   border: 1px solid #F5C0BA; }
 .admin-error-msg { font-size: 13px; color: var(--red); margin: 6px 0 0; }
+
+/* ── Admin tabs ─────────────────────────────────────── */
+
+.admin-tabs {
+  display: flex;
+  gap: 6px;
+  margin-bottom: 20px;
+  background: var(--bg);
+  border-radius: var(--radius-sm);
+  padding: 4px;
+}
+.admin-tab {
+  flex: 1;
+  border: none;
+  background: transparent;
+  border-radius: 8px;
+  padding: 9px;
+  font-size: 14px;
+  font-weight: 500;
+  font-family: var(--font-body);
+  color: var(--muted);
+  cursor: pointer;
+  transition: all 0.15s;
+  min-height: 40px;
+}
+.admin-tab.active {
+  background: var(--surface);
+  color: var(--text);
+  font-weight: 600;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.08);
+}
+
+/* ── Subscriber cards ─────────────────────────────────────── */
+
+.sub-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  padding: 12px 14px;
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 10px;
+}
+.sub-card.sub-expired { border-color: var(--amber); background: #FFFBF2; }
+.sub-card.sub-inactive { border-color: var(--red); background: #FEF5F4; opacity: 0.8; }
+.sub-info { display: flex; flex-direction: column; gap: 2px; flex: 1; min-width: 0; }
+.sub-name { font-size: 15px; font-weight: 600; color: var(--text); }
+.sub-phone { font-size: 12px; color: var(--muted); }
+.sub-meta { font-size: 12px; color: var(--hint); margin-top: 2px; }
+.sub-tag { font-size: 10px; font-weight: 700; border-radius: 4px; padding: 1px 5px; margin-left: 4px; }
+.sub-tag-expired { background: #FFF0CC; color: var(--amber); }
+.sub-tag-blocked  { background: #FDECEA; color: var(--red); }
+.sub-actions { display: flex; flex-direction: column; gap: 6px; flex-shrink: 0; }
+.sub-btn {
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 6px 12px;
+  font-size: 12px;
+  font-weight: 500;
+  font-family: var(--font-body);
+  cursor: pointer;
+  min-height: 34px;
+  transition: all 0.15s;
+  white-space: nowrap;
+}
+.sub-btn-renew   { background: #E8F8F2; color: var(--green); border-color: #B3E8D4; }
+.sub-btn-block   { background: #FEF5F4; color: var(--red);   border-color: #F5C0BA; }
+.sub-btn-unblock { background: var(--bg); color: var(--muted); }
+
+/* ── Gate screen ─────────────────────────────────────── */
+
+.gate-shell {
+  min-height: 100vh;
+  min-height: 100dvh;
+  background: var(--bg);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px 16px;
+  padding-top: calc(24px + var(--safe-top));
+  padding-bottom: calc(24px + var(--safe-bottom));
+  font-family: var(--font-body);
+}
+.gate-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  width: 100%;
+  max-width: 380px;
+  padding: 32px 24px;
+  text-align: center;
+}
+.gate-logo {
+  font-family: var(--font-eth);
+  font-size: 40px;
+  font-weight: 600;
+  color: var(--green);
+  margin-bottom: 6px;
+}
+.gate-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text);
+  margin-bottom: 6px;
+}
+.gate-sub {
+  font-size: 14px;
+  color: var(--muted);
+  margin-bottom: 24px;
+  line-height: 1.5;
+}
+.gate-input-wrap {
+  display: flex;
+  align-items: center;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--bg);
+  padding: 0 14px;
+  margin-bottom: 12px;
+  min-height: 52px;
+  text-align: left;
+}
+.gate-prefix {
+  font-size: 15px;
+  font-weight: 600;
+  color: var(--muted);
+  margin-right: 8px;
+  white-space: nowrap;
+}
+.gate-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  font-size: 18px;
+  font-weight: 500;
+  font-family: var(--font-body);
+  color: var(--text);
+  padding: 12px 0;
+  outline: none;
+  width: 100%;
+}
+.gate-msg {
+  border-radius: var(--radius-sm);
+  padding: 10px 14px;
+  font-size: 13px;
+  line-height: 1.5;
+  margin-bottom: 12px;
+  text-align: left;
+}
+.gate-msg-error { background: #FEF0EE; color: var(--red); border: 1px solid #F5C0BA; }
+.gate-btn {
+  width: 100%;
+  background: var(--green);
+  color: #fff;
+  border: none;
+  border-radius: var(--radius);
+  padding: 15px;
+  font-size: 16px;
+  font-weight: 600;
+  font-family: var(--font-body);
+  cursor: pointer;
+  min-height: 52px;
+  margin-bottom: 16px;
+  transition: opacity 0.15s;
+}
+.gate-btn:active { opacity: 0.82; }
+.gate-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.gate-contact {
+  font-size: 13px;
+  color: var(--hint);
+  line-height: 1.5;
+}

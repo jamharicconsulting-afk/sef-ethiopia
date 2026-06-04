@@ -3,6 +3,7 @@ import HomeScreen from "./screens/HomeScreen";
 import MarketScreen from "./screens/MarketScreen";
 import AlertsScreen from "./screens/AlertsScreen";
 import DetailScreen from "./screens/DetailScreen";
+import GateScreen from "./screens/GateScreen";
 import { commodities as staticCommodities, fetchPrices } from "./data/priceData";
 import { supabase } from "./supabaseClient";
 import { t } from "./i18n/strings";
@@ -16,7 +17,12 @@ export default function App() {
   const [watchlist, setWatchlist] = useState(["coffee_g2", "teff_white", "sesame", "chat_dd"]);
   const [loading, setLoading] = useState(true);
 
-  // Load prices and alerts from Supabase on startup
+  // Subscriber gate
+  const [subscriberName, setSubscriberName] = useState(() => {
+    try { return JSON.parse(sessionStorage.getItem("sef_subscriber"))?.name || null; }
+    catch { return null; }
+  });
+
   useEffect(() => {
     fetchPrices().then(data => {
       setCommodities(data);
@@ -58,7 +64,6 @@ export default function App() {
       })
       .select()
       .single();
-
     if (!error && data) {
       setAlerts(prev => [...prev, {
         id: data.id,
@@ -82,19 +87,18 @@ export default function App() {
     );
   };
 
+  // Show gate if not authenticated
+  if (!subscriberName) {
+    return <GateScreen onAccess={setSubscriberName} />;
+  }
+
   return (
     <div className="app-shell">
       <div className="lang-bar">
         <span className="app-brand">ሴፍ <span className="brand-en">Sef</span></span>
         <div className="lang-switcher">
-          <button
-            className={`lang-btn${lang === "en" ? " active" : ""}`}
-            onClick={() => setLang("en")}
-          >EN</button>
-          <button
-            className={`lang-btn${lang === "am" ? " active" : ""}`}
-            onClick={() => setLang("am")}
-          >አማ</button>
+          <button className={`lang-btn${lang === "en" ? " active" : ""}`} onClick={() => setLang("en")}>EN</button>
+          <button className={`lang-btn${lang === "am" ? " active" : ""}`} onClick={() => setLang("am")}>አማ</button>
         </div>
       </div>
 
@@ -120,6 +124,7 @@ export default function App() {
             alertCount={alerts.length}
             lang={lang}
             tr={tr}
+            subscriberName={subscriberName}
           />
         ) : tab === "markets" ? (
           <MarketScreen
