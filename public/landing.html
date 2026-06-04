@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="description" content="Sef — Real-time commodity price index for Ethiopian businesses. Coffee, teff, sesame, wheat and more across 5 major markets." />
+  <title>Sef ሴፍ — Ethiopia Market Price Index</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Serif+Ethiopic:wght@400;600;700&family=DM+Sans:ital,wght@0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --green:   #1D9E75;
+      --green-d: #167A5C;
+      --amber:   #BA7517;
+      --red:     #C0392B;
+      --text:    #1A1A18;
+      --muted:   #6B6860;
+      --hint:    #A09D97;
+      --bg:      #F7F5F0;
+      --surface: #FFFFFF;
+      --border:  #E8E4DC;
+      --radius:  14px;
+      --font:    'DM Sans', sans-serif;
+      --font-eth:'Noto Serif Ethiopic', serif;
+    }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: var(--font);
+      color: var(--text);
+      background: var(--bg);
+      -webkit-font-smoothing: antialiased;
+    }
+
+    a { color: inherit; text-decoration: none; }
+    img { display: block; max-width: 100%; }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 100;
+      background: rgba(247,245,240,0.92);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+      padding: 0 24px;
+      height: 60px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .nav-brand {
+      font-family: var(--font-eth);
+      font-size: 22px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .nav-brand span {
+      font-family: var(--font);
+      font-size: 16px;
+      font-weight: 500;
+      color: var(--muted);
+      margin-left: 6px;
+    }
+    .nav-links {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .nav-link {
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--muted);
+      padding: 8px 14px;
+      border-radius: 8px;
+      transition: color 0.15s;
+    }
+    .nav-link:hover { color: var(--text); }
+    .nav-cta {
+      background: var(--green);
+      color: #fff;
+      font-size: 14px;
+      font-weight: 600;
+      padding: 9px 18px;
+      border-radius: 99px;
+      transition: opacity 0.15s;
+    }
+    .nav-cta:hover { opacity: 0.88; }
+
+    /* ── HERO ── */
+    .hero {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 80px 24px 64px;
+      text-align: center;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 7px;
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 6px 14px;
+      font-size: 13px;
+      font-weight: 500;
+      color: var(--muted);
+      margin-bottom: 28px;
+    }
+    .hero-badge-dot {
+      width: 7px; height: 7px;
+      border-radius: 50%;
+      background: var(--green);
+    }
+    .hero h1 {
+      font-size: clamp(36px, 6vw, 58px);
+      font-weight: 700;
+      line-height: 1.1;
+      letter-spacing: -0.5px;
+      color: var(--text);
+      margin-bottom: 20px;
+    }
+    .hero h1 em {
+      font-style: normal;
+      color: var(--green);
+      font-family: var(--font-eth);
+    }
+    .hero p {
+      font-size: 18px;
+      color: var(--muted);
+      line-height: 1.65;
+      max-width: 520px;
+      margin: 0 auto 36px;
+    }
+    .hero-btns {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-primary {
+      background: var(--green);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: var(--font);
+      padding: 14px 28px;
+      border-radius: 99px;
+      border: none;
+      cursor: pointer;
+      transition: opacity 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-secondary {
+      background: var(--surface);
+      color: var(--text);
+      font-size: 16px;
+      font-weight: 600;
+      font-family: var(--font);
+      padding: 14px 28px;
+      border-radius: 99px;
+      border: 1px solid var(--border);
+      cursor: pointer;
+      transition: border-color 0.15s;
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .btn-secondary:hover { border-color: var(--text); }
+
+    /* ── TICKER ── */
+    .ticker-section {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+      overflow: hidden;
+      padding: 14px 0;
+    }
+    .ticker-track {
+      display: flex;
+      gap: 0;
+      animation: ticker-scroll 28s linear infinite;
+      width: max-content;
+    }
+    .ticker-track:hover { animation-play-state: paused; }
+    @keyframes ticker-scroll {
+      0%   { transform: translateX(0); }
+      100% { transform: translateX(-50%); }
+    }
+    .tick {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      padding: 0 28px;
+      border-right: 1px solid var(--border);
+      white-space: nowrap;
+    }
+    .tick-name { font-size: 13px; font-weight: 600; }
+    .tick-price { font-size: 13px; color: var(--text); font-weight: 500; }
+    .tick-up   { font-size: 12px; color: var(--green); font-weight: 600; }
+    .tick-down { font-size: 12px; color: var(--red);   font-weight: 600; }
+
+    /* ── FEATURES ── */
+    .section {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 80px 24px;
+    }
+    .section-label {
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 0.1em;
+      text-transform: uppercase;
+      color: var(--green);
+      margin-bottom: 12px;
+    }
+    .section-title {
+      font-size: clamp(26px, 4vw, 38px);
+      font-weight: 700;
+      line-height: 1.2;
+      color: var(--text);
+      margin-bottom: 14px;
+    }
+    .section-sub {
+      font-size: 17px;
+      color: var(--muted);
+      line-height: 1.65;
+      max-width: 540px;
+      margin-bottom: 52px;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+      gap: 16px;
+    }
+    .feature-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 24px;
+    }
+    .feature-icon {
+      font-size: 28px;
+      margin-bottom: 14px;
+    }
+    .feature-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--text);
+      margin-bottom: 8px;
+    }
+    .feature-desc {
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.6;
+    }
+
+    /* ── MARKETS ── */
+    .markets-section {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      border-bottom: 1px solid var(--border);
+    }
+    .markets-inner {
+      max-width: 1000px;
+      margin: 0 auto;
+      padding: 80px 24px;
+    }
+    .markets-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      gap: 12px;
+      margin-top: 40px;
+    }
+    .market-card {
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 20px 16px;
+      text-align: center;
+    }
+    .market-flag { font-size: 28px; margin-bottom: 8px; }
+    .market-name { font-size: 15px; font-weight: 600; color: var(--text); margin-bottom: 4px; }
+    .market-sub  { font-size: 12px; color: var(--hint); }
+
+    .commodities-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      margin-top: 40px;
+    }
+    .commodity-pill {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: var(--bg);
+      border: 1px solid var(--border);
+      border-radius: 99px;
+      padding: 8px 16px;
+      font-size: 14px;
+      font-weight: 500;
+      color: var(--text);
+    }
+    .commodity-dot {
+      width: 9px; height: 9px;
+      border-radius: 50%;
+      flex-shrink: 0;
+    }
+
+    /* ── PRICING ── */
+    .pricing-section { background: var(--bg); }
+    .pricing-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 16px;
+      max-width: 700px;
+    }
+    .pricing-card {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      position: relative;
+    }
+    .pricing-card.featured {
+      border-color: var(--green);
+      border-width: 2px;
+    }
+    .pricing-badge {
+      position: absolute;
+      top: -13px;
+      left: 50%;
+      transform: translateX(-50%);
+      background: var(--green);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      padding: 4px 14px;
+      border-radius: 99px;
+      white-space: nowrap;
+    }
+    .pricing-plan {
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: var(--muted);
+      margin-bottom: 16px;
+    }
+    .pricing-amount {
+      display: flex;
+      align-items: flex-end;
+      gap: 6px;
+      margin-bottom: 6px;
+    }
+    .pricing-etb {
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .pricing-price {
+      font-size: 46px;
+      font-weight: 700;
+      color: var(--text);
+      line-height: 1;
+      letter-spacing: -1px;
+    }
+    .pricing-period {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .pricing-save {
+      display: inline-block;
+      background: #E8F8F2;
+      color: var(--green);
+      font-size: 12px;
+      font-weight: 600;
+      padding: 3px 10px;
+      border-radius: 99px;
+      margin-bottom: 24px;
+    }
+    .pricing-features {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      margin-bottom: 28px;
+    }
+    .pricing-features li {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.4;
+    }
+    .pricing-features li::before {
+      content: "✓";
+      color: var(--green);
+      font-weight: 700;
+      flex-shrink: 0;
+      margin-top: 1px;
+    }
+    .pricing-btn {
+      display: block;
+      width: 100%;
+      text-align: center;
+      padding: 14px;
+      border-radius: var(--radius);
+      font-size: 15px;
+      font-weight: 600;
+      font-family: var(--font);
+      cursor: pointer;
+      border: none;
+      transition: opacity 0.15s;
+    }
+    .pricing-btn-green  { background: var(--green); color: #fff; }
+    .pricing-btn-outline { background: transparent; color: var(--text); border: 1.5px solid var(--border); }
+    .pricing-btn:hover { opacity: 0.85; }
+
+    /* ── HOW IT WORKS ── */
+    .steps-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 32px;
+      margin-top: 52px;
+      position: relative;
+    }
+    .step {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 12px;
+    }
+    .step-num {
+      width: 40px; height: 40px;
+      border-radius: 50%;
+      background: var(--green);
+      color: #fff;
+      font-size: 16px;
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      flex-shrink: 0;
+    }
+    .step-title { font-size: 16px; font-weight: 600; color: var(--text); }
+    .step-desc  { font-size: 14px; color: var(--muted); line-height: 1.6; }
+
+    /* ── FAQ ── */
+    .faq-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-top: 40px;
+      max-width: 680px;
+    }
+    .faq-item {
+      background: var(--surface);
+      border: 1px solid var(--border);
+      border-radius: var(--radius);
+      overflow: hidden;
+    }
+    .faq-q {
+      width: 100%;
+      background: none;
+      border: none;
+      padding: 18px 20px;
+      font-size: 15px;
+      font-weight: 600;
+      font-family: var(--font);
+      color: var(--text);
+      text-align: left;
+      cursor: pointer;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 12px;
+    }
+    .faq-q .faq-arrow { font-size: 18px; color: var(--hint); transition: transform 0.2s; flex-shrink: 0; }
+    .faq-item.open .faq-arrow { transform: rotate(180deg); }
+    .faq-a {
+      display: none;
+      padding: 0 20px 18px;
+      font-size: 14px;
+      color: var(--muted);
+      line-height: 1.7;
+      border-top: 1px solid var(--border);
+      padding-top: 14px;
+    }
+    .faq-item.open .faq-a { display: block; }
+
+    /* ── CTA BANNER ── */
+    .cta-section {
+      background: var(--text);
+      padding: 80px 24px;
+      text-align: center;
+    }
+    .cta-section h2 {
+      font-size: clamp(26px, 4vw, 40px);
+      font-weight: 700;
+      color: #fff;
+      margin-bottom: 14px;
+      line-height: 1.2;
+    }
+    .cta-section p {
+      font-size: 17px;
+      color: rgba(255,255,255,0.65);
+      margin-bottom: 36px;
+      max-width: 460px;
+      margin-left: auto;
+      margin-right: auto;
+      line-height: 1.6;
+    }
+    .cta-btns {
+      display: flex;
+      gap: 12px;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .btn-whatsapp {
+      background: #25D366;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: var(--font);
+      padding: 14px 28px;
+      border-radius: 99px;
+      border: none;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      transition: opacity 0.15s;
+    }
+    .btn-whatsapp:hover { opacity: 0.88; }
+    .btn-email {
+      background: transparent;
+      color: #fff;
+      font-size: 16px;
+      font-weight: 600;
+      font-family: var(--font);
+      padding: 14px 28px;
+      border-radius: 99px;
+      border: 1.5px solid rgba(255,255,255,0.3);
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 9px;
+      transition: border-color 0.15s;
+    }
+    .btn-email:hover { border-color: rgba(255,255,255,0.7); }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--surface);
+      border-top: 1px solid var(--border);
+      padding: 32px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 16px;
+    }
+    .footer-brand {
+      font-family: var(--font-eth);
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+    }
+    .footer-links {
+      display: flex;
+      gap: 20px;
+      flex-wrap: wrap;
+    }
+    .footer-link { font-size: 13px; color: var(--muted); }
+    .footer-link:hover { color: var(--text); }
+    .footer-copy { font-size: 13px; color: var(--hint); }
+
+    /* ── MODAL ── */
+    .modal-overlay {
+      display: none;
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.5);
+      z-index: 500;
+      align-items: center;
+      justify-content: center;
+      padding: 24px;
+    }
+    .modal-overlay.open { display: flex; }
+    .modal {
+      background: var(--surface);
+      border-radius: var(--radius);
+      padding: 32px 28px;
+      width: 100%;
+      max-width: 420px;
+      position: relative;
+    }
+    .modal-close {
+      position: absolute;
+      top: 16px; right: 16px;
+      background: none;
+      border: none;
+      font-size: 20px;
+      color: var(--hint);
+      cursor: pointer;
+      padding: 4px 8px;
+    }
+    .modal h3 {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text);
+      margin-bottom: 6px;
+    }
+    .modal-sub {
+      font-size: 14px;
+      color: var(--muted);
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .modal-plan-pill {
+      background: #E8F8F2;
+      color: var(--green);
+      font-size: 13px;
+      font-weight: 600;
+      padding: 6px 14px;
+      border-radius: 99px;
+      display: inline-block;
+      margin-bottom: 24px;
+    }
+    .modal-options {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 16px;
+    }
+    .modal-option {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      padding: 16px;
+      border: 1.5px solid var(--border);
+      border-radius: var(--radius);
+      cursor: pointer;
+      text-decoration: none;
+      color: var(--text);
+      transition: border-color 0.15s;
+      font-family: var(--font);
+    }
+    .modal-option:hover { border-color: var(--green); }
+    .modal-option-icon { font-size: 24px; flex-shrink: 0; }
+    .modal-option-title { font-size: 15px; font-weight: 600; margin-bottom: 2px; }
+    .modal-option-sub   { font-size: 12px; color: var(--muted); }
+    .modal-note {
+      font-size: 12px;
+      color: var(--hint);
+      text-align: center;
+      line-height: 1.6;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 600px) {
+      nav { padding: 0 16px; }
+      .nav-link { display: none; }
+      .hero { padding: 56px 16px 48px; }
+      .section { padding: 56px 16px; }
+      .markets-inner { padding: 56px 16px; }
+      .cta-section { padding: 56px 16px; }
+      footer { padding: 24px 16px; flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-brand">ሴፍ <span>Sef</span></a>
+  <div class="nav-links">
+    <a href="#features" class="nav-link">Features</a>
+    <a href="#pricing" class="nav-link">Pricing</a>
+    <a href="#faq" class="nav-link">FAQ</a>
+    <a href="#pricing" class="nav-cta">Subscribe</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-badge">
+    <span class="hero-badge-dot"></span>
+    Live prices across 5 Ethiopian markets
+  </div>
+  <h1>Know the price.<br>Make the deal.<br><em>ሴፍ።</em></h1>
+  <p>Real-time commodity prices for Ethiopian traders, exporters, and businesses. Coffee, teff, sesame, wheat — updated daily from Mercato, ECX, and regional reporters.</p>
+  <div class="hero-btns">
+    <a href="#pricing" class="btn-primary">Start your subscription →</a>
+    <a href="/index.html" class="btn-secondary">Preview the app</a>
+  </div>
+</section>
+
+<!-- LIVE TICKER -->
+<div class="ticker-section">
+  <div class="ticker-track">
+    <!-- First set -->
+    <div class="tick"><span class="tick-name" style="color:#1D9E75">Coffee Gr.2</span><span class="tick-price">ETB 9,450 / quintal</span><span class="tick-up">▲ 2.1%</span></div>
+    <div class="tick"><span class="tick-name" style="color:#BA7517">Teff White</span><span class="tick-price">ETB 3,200 / quintal</span><span class="tick-down">▼ 0.8%</span></div>
+    <div class="tick"><span class="tick-name" style="color:#378ADD">Sesame</span><span class="tick-price">ETB 6,780 / quintal</span><span class="tick-up">▲ 1.3%</span></div>
+    <div class="tick"><span class="tick-name" style="color:#D85A30">Chat</span><span class="tick-price">ETB 1,120 / kg</span><span class="tick-up">▲ 0.5%</span></div>
+    <div class="tick"><span class="tick-name" style="color:#639922">Wheat</span><span class="tick-price">ETB 2,940 / quintal</span><span class="tick-down">▼ 0.4%</span></div>
+    <div class="tick"><span class="tick-name" style="color:#534AB7">Chickpeas</span><span class="tick-price">ETB 4,100 / quintal</span><span class="tick-up">▲ 0.9%</span></div>
+    <div class="tick"><span class="tick-name" style="color:#0F6E56">Coffee Gr.4</span><span class="tick-price">ETB 7,800 / quintal</span><span class="tick-up">▲ 1.8%</span></div>
+    <div class="tick"><span class="tick-name" style="color:#993C1D">Teff Mixed</span><span class="tick-price">ETB 2,750 / quintal</span><span class="tick-down">▼ 0.3%</span></div>
+    <!-- Duplicate for seamless loop -->
+    <div class="tick"><span class="tick-name" style="color:#1D9E75">Coffee Gr.2</span><span class="tick-price">ETB 9,450 / quintal</span><span class="tick-up">▲ 2.1%</span></div>
+    <div class="tick"><span class="tick-name" style="color:#BA7517">Teff White</span><span class="tick-price">ETB 3,200 / quintal</span><span class="tick-up">▼ 0.8%</span></div>
+    <div class="tick"><span class="tick-name" style="color:#378ADD">Sesame</span><span class="tick-price">ETB 6,780 / quintal</span><span class="tick-up">▲ 1.3%</span></div>
+    <div class="tick"><span class="tick-name" style="color:#D85A30">Chat</span><span class="tick-price">ETB 1,120 / kg</span><span class="tick-up">▲ 0.5%</span></div>
+    <div class="tick"><span class="tick-name" style="color:#639922">Wheat</span><span class="tick-price">ETB 2,940 / quintal</span><span class="tick-down">▼ 0.4%</span></div>
+    <div class="tick"><span class="tick-name" style="color:#534AB7">Chickpeas</span><span class="tick-price">ETB 4,100 / quintal</span><span class="tick-up">▲ 0.9%</span></div>
+    <div class="tick"><span class="tick-name" style="color:#0F6E56">Coffee Gr.4</span><span class="tick-price">ETB 7,800 / quintal</span><span class="tick-up">▲ 1.8%</span></div>
+    <div class="tick"><span class="tick-name" style="color:#993C1D">Teff Mixed</span><span class="tick-price">ETB 2,750 / quintal</span><span class="tick-down">▼ 0.3%</span></div>
+  </div>
+</div>
+
+<!-- FEATURES -->
+<section class="section" id="features">
+  <div class="section-label">Why Sef</div>
+  <h2 class="section-title">Everything you need to trade with confidence</h2>
+  <p class="section-sub">Stop calling around for prices. Sef puts the whole market in your pocket, updated every morning.</p>
+  <div class="features-grid">
+    <div class="feature-card">
+      <div class="feature-icon">📈</div>
+      <div class="feature-title">Daily price updates</div>
+      <div class="feature-desc">Prices submitted every morning by on-the-ground reporters at Mercato, ECX, and regional markets.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🔔</div>
+      <div class="feature-title">Price alerts</div>
+      <div class="feature-desc">Set a target price for any commodity and get notified the moment it crosses your threshold.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📊</div>
+      <div class="feature-title">30-day trend charts</div>
+      <div class="feature-desc">See where prices are heading with sparkline charts showing the last 30 days of movement.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">⭐</div>
+      <div class="feature-title">Watchlist</div>
+      <div class="feature-desc">Pin your most important commodities to your home screen for instant access every day.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">🇪🇹</div>
+      <div class="feature-title">English & Amharic</div>
+      <div class="feature-desc">Switch between English and አማርኛ with one tap. Built for Ethiopian traders first.</div>
+    </div>
+    <div class="feature-card">
+      <div class="feature-icon">📱</div>
+      <div class="feature-title">Works on any phone</div>
+      <div class="feature-desc">Runs in your browser — no app download needed. Works on Android, iPhone, and desktop.</div>
+    </div>
+  </div>
+</section>
+
+<!-- MARKETS -->
+<section class="markets-section">
+  <div class="markets-inner">
+    <div class="section-label">Coverage</div>
+    <h2 class="section-title">5 markets. 8 commodities.</h2>
+    <p class="section-sub">Prices sourced from Ethiopia's most active trading hubs, cross-checked against ECX and EGTE data.</p>
+
+    <div class="markets-grid">
+      <div class="market-card">
+        <div class="market-flag">🏙️</div>
+        <div class="market-name">Addis Ababa</div>
+        <div class="market-sub">Mercato + ECX</div>
+      </div>
+      <div class="market-card">
+        <div class="market-flag">🌿</div>
+        <div class="market-name">Jimma</div>
+        <div class="market-sub">Regional reporter</div>
+      </div>
+      <div class="market-card">
+        <div class="market-flag">🌅</div>
+        <div class="market-name">Dire Dawa</div>
+        <div class="market-sub">Regional reporter</div>
+      </div>
+      <div class="market-card">
+        <div class="market-flag">⛰️</div>
+        <div class="market-name">Mek'ele</div>
+        <div class="market-sub">Regional reporter</div>
+      </div>
+      <div class="market-card">
+        <div class="market-flag">🌊</div>
+        <div class="market-name">Hawassa</div>
+        <div class="market-sub">Regional reporter</div>
+      </div>
+    </div>
+
+    <div class="commodities-list">
+      <div class="commodity-pill"><span class="commodity-dot" style="background:#1D9E75"></span>Coffee Grade 2</div>
+      <div class="commodity-pill"><span class="commodity-dot" style="background:#0F6E56"></span>Coffee Grade 4</div>
+      <div class="commodity-pill"><span class="commodity-dot" style="background:#BA7517"></span>Teff (White)</div>
+      <div class="commodity-pill"><span class="commodity-dot" style="background:#993C1D"></span>Teff (Mixed)</div>
+      <div class="commodity-pill"><span class="commodity-dot" style="background:#639922"></span>Wheat</div>
+      <div class="commodity-pill"><span class="commodity-dot" style="background:#378ADD"></span>Sesame</div>
+      <div class="commodity-pill"><span class="commodity-dot" style="background:#534AB7"></span>Chickpeas</div>
+      <div class="commodity-pill"><span class="commodity-dot" style="background:#D85A30"></span>Chat</div>
+    </div>
+  </div>
+</section>
+
+<!-- HOW IT WORKS -->
+<section class="section">
+  <div class="section-label">Getting started</div>
+  <h2 class="section-title">Up and running in minutes</h2>
+  <p class="section-sub">No app to download, no complicated setup.</p>
+  <div class="steps-grid">
+    <div class="step">
+      <div class="step-num">1</div>
+      <div class="step-title">Choose a plan</div>
+      <div class="step-desc">Pick monthly or yearly below and contact us via WhatsApp or email.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">2</div>
+      <div class="step-title">Make payment</div>
+      <div class="step-desc">Pay via Telebirr, bank transfer, or any method that works for you.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">3</div>
+      <div class="step-title">Get access</div>
+      <div class="step-desc">We register your phone number and you're in — open the app, enter your number, done.</div>
+    </div>
+    <div class="step">
+      <div class="step-num">4</div>
+      <div class="step-title">Check prices daily</div>
+      <div class="step-desc">Bookmark the app on your home screen and check every morning before you trade.</div>
+    </div>
+  </div>
+</section>
+
+<!-- PRICING -->
+<section class="section pricing-section" id="pricing">
+  <div class="section-label">Pricing</div>
+  <h2 class="section-title">Simple, transparent pricing</h2>
+  <p class="section-sub">One subscription covers your whole business. Cancel or renew any time.</p>
+
+  <div class="pricing-grid">
+    <!-- Monthly -->
+    <div class="pricing-card">
+      <div class="pricing-plan">Monthly</div>
+      <div class="pricing-etb">ETB</div>
+      <div class="pricing-amount">
+        <span class="pricing-price">1,000</span>
+      </div>
+      <div class="pricing-period">per month</div>
+      <div style="height:28px"></div>
+      <ul class="pricing-features">
+        <li>All 8 commodities</li>
+        <li>All 5 markets</li>
+        <li>Daily price updates</li>
+        <li>30-day trend charts</li>
+        <li>Price alerts</li>
+        <li>English & Amharic</li>
+      </ul>
+      <button class="pricing-btn pricing-btn-outline" onclick="openModal('monthly')">Subscribe monthly</button>
+    </div>
+
+    <!-- Yearly -->
+    <div class="pricing-card featured">
+      <div class="pricing-badge">Best value — save 2 months</div>
+      <div class="pricing-plan">Yearly</div>
+      <div class="pricing-etb">ETB</div>
+      <div class="pricing-amount">
+        <span class="pricing-price">10,000</span>
+      </div>
+      <div class="pricing-period">per year</div>
+      <div class="pricing-save">Save ETB 2,000 vs monthly</div>
+      <ul class="pricing-features">
+        <li>Everything in monthly</li>
+        <li>Priority support</li>
+        <li>Early access to new markets</li>
+        <li>Early access to new commodities</li>
+      </ul>
+      <button class="pricing-btn pricing-btn-green" onclick="openModal('yearly')">Subscribe yearly</button>
+    </div>
+  </div>
+</section>
+
+<!-- FAQ -->
+<section class="section" id="faq">
+  <div class="section-label">FAQ</div>
+  <h2 class="section-title">Common questions</h2>
+  <div class="faq-list">
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        How do I access the app after subscribing?
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">Once your payment is confirmed we register your phone number. Open the app, enter your phone number, and you're in — no password, no download needed.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        How often are prices updated?
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">Prices are updated every morning by our network of on-the-ground reporters at each market. You'll see the freshest prices by 7:00 AM EAT each day.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        What payment methods do you accept?
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">We currently accept Telebirr, CBE Birr, and commercial bank transfers. Contact us via WhatsApp or email and we'll arrange the payment method that works best for you.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Can I use it outside Ethiopia?
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">Yes. The app works from any country and supports international phone numbers. Many of our users are Ethiopian diaspora and international traders who deal with Ethiopian commodities.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        What happens when my subscription expires?
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">You'll lose access when your subscription expires. Simply contact us to renew and your access will be restored immediately. We'll also reach out to you a few days before your renewal date.</div>
+    </div>
+    <div class="faq-item">
+      <button class="faq-q" onclick="toggleFaq(this)">
+        Will more commodities and markets be added?
+        <span class="faq-arrow">▾</span>
+      </button>
+      <div class="faq-a">Yes — we're actively expanding coverage. Yearly subscribers get early access to all new markets and commodities as they're added.</div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA BANNER -->
+<section class="cta-section">
+  <h2>Start trading smarter today</h2>
+  <p>Join Ethiopian traders and exporters who check Sef every morning.</p>
+  <div class="cta-btns">
+    <a href="https://wa.me/251988026200?text=Hi%2C%20I%27d%20like%20to%20subscribe%20to%20Sef%20Ethiopia%20Market%20Prices." class="btn-whatsapp" target="_blank" rel="noopener">
+      <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp us
+    </a>
+    <a href="mailto:jamharicconsulting@gmail.com?subject=Sef%20Subscription&body=Hi%2C%20I%27d%20like%20to%20subscribe%20to%20Sef%20Ethiopia%20Market%20Prices." class="btn-email" target="_blank" rel="noopener">
+      ✉️ Email us
+    </a>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="footer-brand">ሴፍ Sef</div>
+  <div class="footer-links">
+    <a href="#features" class="footer-link">Features</a>
+    <a href="#pricing" class="footer-link">Pricing</a>
+    <a href="#faq" class="footer-link">FAQ</a>
+    <a href="mailto:jamharicconsulting@gmail.com" class="footer-link">Contact</a>
+  </div>
+  <div class="footer-copy">© 2026 Jamharic Consulting</div>
+</footer>
+
+<!-- SUBSCRIBE MODAL -->
+<div class="modal-overlay" id="modal" onclick="closeModalOutside(event)">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <h3>Subscribe to Sef</h3>
+    <p class="modal-sub">Contact us to complete your subscription. We'll confirm your payment and activate your account within a few hours.</p>
+    <div class="modal-plan-pill" id="modal-plan-label">Monthly — ETB 1,000</div>
+    <div class="modal-options">
+      <a id="modal-whatsapp" href="#" class="modal-option" target="_blank" rel="noopener">
+        <span class="modal-option-icon">💬</span>
+        <div>
+          <div class="modal-option-title">WhatsApp</div>
+          <div class="modal-option-sub">+251 988 026 200 · Usually replies within 1 hour</div>
+        </div>
+      </a>
+      <a id="modal-email" href="#" class="modal-option" target="_blank" rel="noopener">
+        <span class="modal-option-icon">✉️</span>
+        <div>
+          <div class="modal-option-title">Email</div>
+          <div class="modal-option-sub">jamharicconsulting@gmail.com</div>
+        </div>
+      </a>
+    </div>
+    <p class="modal-note">We accept Telebirr, CBE Birr, and bank transfer.<br>Your access is activated the same day payment is confirmed.</p>
+  </div>
+</div>
+
+<script>
+  function openModal(plan) {
+    const isYearly = plan === 'yearly';
+    document.getElementById('modal-plan-label').textContent = isYearly ? 'Yearly — ETB 10,000' : 'Monthly — ETB 1,000';
+    const msg = isYearly
+      ? "Hi, I'd like to subscribe to Sef yearly (ETB 10,000). Please send payment details."
+      : "Hi, I'd like to subscribe to Sef monthly (ETB 1,000). Please send payment details.";
+    const subj = isYearly ? "Sef Yearly Subscription" : "Sef Monthly Subscription";
+    document.getElementById('modal-whatsapp').href = "https://wa.me/251988026200?text=" + encodeURIComponent(msg);
+    document.getElementById('modal-email').href = "mailto:jamharicconsulting@gmail.com?subject=" + encodeURIComponent(subj) + "&body=" + encodeURIComponent(msg);
+    document.getElementById('modal').classList.add('open');
+    document.body.style.overflow = 'hidden';
+  }
+
+  function closeModal() {
+    document.getElementById('modal').classList.remove('open');
+    document.body.style.overflow = '';
+  }
+
+  function closeModalOutside(e) {
+    if (e.target === document.getElementById('modal')) closeModal();
+  }
+
+  function toggleFaq(btn) {
+    const item = btn.closest('.faq-item');
+    item.classList.toggle('open');
+  }
+</script>
+</body>
+</html>
