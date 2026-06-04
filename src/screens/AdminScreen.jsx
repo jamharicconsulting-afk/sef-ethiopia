@@ -4,6 +4,21 @@ import { commodities, markets } from "../data/priceData";
 
 const ADMIN_PASSWORD = "sef2024";
 
+const COUNTRY_CODES = [
+  { code: "+251", flag: "🇪🇹", name: "Ethiopia" },
+  { code: "+1",   flag: "🇺🇸", name: "USA / Canada" },
+  { code: "+44",  flag: "🇬🇧", name: "UK" },
+  { code: "+971", flag: "🇦🇪", name: "UAE" },
+  { code: "+966", flag: "🇸🇦", name: "Saudi Arabia" },
+  { code: "+254", flag: "🇰🇪", name: "Kenya" },
+  { code: "+255", flag: "🇹🇿", name: "Tanzania" },
+  { code: "+256", flag: "🇺🇬", name: "Uganda" },
+  { code: "+20",  flag: "🇪🇬", name: "Egypt" },
+  { code: "+49",  flag: "🇩🇪", name: "Germany" },
+  { code: "+46",  flag: "🇸🇪", name: "Sweden" },
+  { code: "+61",  flag: "🇦🇺", name: "Australia" },
+];
+
 export default function AdminScreen() {
   const [authed, setAuthed] = useState(false);
   const [passwordInput, setPasswordInput] = useState("");
@@ -25,6 +40,8 @@ export default function AdminScreen() {
   const [subLoading, setSubLoading] = useState(false);
   const [subName, setSubName] = useState("");
   const [subPhone, setSubPhone] = useState("");
+  const [subCountryCode, setSubCountryCode] = useState("+251");
+  const [subDropdown, setSubDropdown] = useState(false);
   const [subPlan, setSubPlan] = useState("monthly");
   const [subStatus, setSubStatus] = useState(null);
   const [subError, setSubError] = useState("");
@@ -94,7 +111,8 @@ export default function AdminScreen() {
     }
     setSubStatus("loading");
     setSubError("");
-    const normalized = subPhone.trim().replace(/\s+/g, "").replace(/^0/, "+251");
+    const digits = subPhone.trim().replace(/\s+/g, "").replace(/^0+/, "");
+    const normalized = subCountryCode + digits;
     const { error } = await supabase.from("subscribers").insert({
       name: subName.trim(),
       phone: normalized,
@@ -109,6 +127,7 @@ export default function AdminScreen() {
       setSubStatus("success");
       setSubName("");
       setSubPhone("");
+      setSubCountryCode("+251");
       setSubPlan("monthly");
       setTimeout(() => setSubStatus(null), 2000);
       loadSubscribers();
@@ -237,8 +256,31 @@ export default function AdminScreen() {
               </div>
               <div className="admin-field">
                 <label className="admin-label">Phone</label>
-                <input className="admin-input" type="tel" inputMode="tel" placeholder="09XX XXX XXXX or +251..."
-                  value={subPhone} onChange={e => setSubPhone(e.target.value)} />
+                <div className="gate-phone-row" style={{marginBottom:0}}>
+                  <div className="gate-cc-wrap">
+                    <button className="gate-cc-btn" type="button" onClick={() => setSubDropdown(d => !d)}>
+                      <span>{COUNTRY_CODES.find(c => c.code === subCountryCode)?.flag}</span>
+                      <span>{subCountryCode}</span>
+                      <span className="gate-cc-arrow">▾</span>
+                    </button>
+                    {subDropdown && (
+                      <div className="gate-cc-dropdown">
+                        {COUNTRY_CODES.map(c => (
+                          <button key={c.code} type="button"
+                            className={`gate-cc-option${c.code === subCountryCode ? " active" : ""}`}
+                            onClick={() => { setSubCountryCode(c.code); setSubDropdown(false); }}
+                          >
+                            <span>{c.flag}</span>
+                            <span>{c.name}</span>
+                            <span className="gate-cc-option-code">{c.code}</span>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                  <input className="gate-input" type="tel" inputMode="tel" placeholder="9XX XXX XXXX"
+                    value={subPhone} onChange={e => setSubPhone(e.target.value)} />
+                </div>
               </div>
               <div className="admin-field">
                 <label className="admin-label">Plan</label>
